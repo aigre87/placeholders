@@ -239,3 +239,79 @@ function customizeRadiobox($element){
   z-index:1;
 }
 /*ОФОРМЛЕНИЕ  чекбоксов и адиобоксов END */
+/*КЛАССЫ ДЛЯ ОФОРМЛЕНИЯ ТАБЛИЦ*/
+function allTablesInit(){
+    $(".like_a_table").each(function() {
+        var $table = $(this);
+
+        $table.find(".tr:has(.td):first").find(".td").addClass("firstTdRow");
+    });
+
+    $("table:not(.importVidjet)").each(function() {
+        var $table = $(this),
+        column_count = 0;
+
+        if( $table.closest(".importVidjet").length == 0 ){
+            $table.find("tr:has(td):first").find("td").addClass("firstTdRow");
+
+            $table.find('tr:has(td):first td').each(function () {
+                if ($(this).attr('colspan')) {
+                    column_count += +$(this).attr('colspan');
+                } else {
+                    column_count++;
+                }
+            });
+
+            $table.find("tr").filter(function() {
+
+              // Adds row children and colspan values of those children
+
+              var child_count = 0;
+              $("td", this).each(function(index) {
+                if ($(this).attr('colspan') != null) {
+                  child_count += parseInt($(this).attr('colspan'));
+                } else {
+                  child_count += 1;
+                }
+              });
+
+              return child_count == column_count;
+            }).filter(':even').addClass('oddrow');
+
+            /*скрол для больших таблиц выходящих за рамки в детальной новости*/
+            if( $table.closest(".detailContent").length > 0 && $("body.press-center-news").length > 0 ){
+                if( $table.outerWidth() > $table.closest(".w-2col").outerWidth() ){
+                    $table.wrap("<div class='tableScrollWrapper'></div>");
+                    if( !myGlobalisMobileDevice ){
+                        var $thisTSW = $table.closest(".tableScrollWrapper");
+                        $thisTSW.niceScroll({
+                            cursorcolor: '#ff9300',
+                            preservenativescrolling: false,
+                            cursorwidth: '8px',
+                            cursorborderradius: '2px',
+                            cursorborder: '0px solid #ff9300',
+                            background: 'transparent',
+                            scrollspeed: 70,
+                            mousescrollstep: 50,
+                            railoffset: {top: 0, right: 0, left: 0, bottom: 0},
+                            cursoropacitymin: 1,
+                            cursoropacitymax: 1,
+                            horizrailenabled: true,
+                            zindex: 2,
+                            nativeparentscrolling: true,
+                            autohidemode: false
+                        });
+                    }
+                }
+            }
+        }
+
+    });
+    $("tr.oddrow td[rowspan]").each(function() {
+      $(this).parent().nextAll().slice(0, this.rowSpan - 1).addClass('oddrow');
+    });
+    $("tr td[rowspan], tr th[rowspan]").each(function() {
+      $(this).parent().nextAll().slice(0, this.rowSpan - 1).addClass('noFirstTd');
+    });
+};
+/*КЛАССЫ ДЛЯ ОФОРМЛЕНИЯ ТАБЛИЦ END*/
