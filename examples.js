@@ -94,7 +94,42 @@ function customVideoPlayer(){
     });
 }
 /*video JS END*/
+/*slider*/
+function slide(dir, index){
+    cur = $slides.filter(".current").index();
+    var nextCur;
+    var Xform;
+    if((dir === "right") && (cur !== slidesCount-1)){
+        nextCur = cur+1;
+    }else if((dir === "right") && (cur === slidesCount-1)){
+        nextCur = 0;
+    }else if((dir === "left") && (cur !== 0)){
+        nextCur = cur-1;
+    }else if((dir === "left") && (cur === 0)){
+        nextCur = slidesCount-1;
+    }else{
+      nextCur = index;
+      if(nextCur > cur){
+          var dir = "right";
+      }else if(nextCur < cur){
+          var dir = "left";
+      }else{
+          return false;
+      }
+    }
+    dir === "right" ? Xform = 100 : Xform = -100;
 
+    TweenMax.to( $slides.eq(cur), 0.5, {xPercent:-Xform, autoAlpha:0, clearProps: "all", zIndex: 0});
+    TweenMax.fromTo( $slides.eq(nextCur), 0.5, {xPercent: Xform}, {xPercent:0, autoAlpha:1, zIndex: 1});
+
+    $slides.removeClass("current start");
+    $slides.eq(nextCur).addClass("current");
+    if( args.indexOf("hasnav") > -1 ){
+      $pt.removeClass("current");
+      $pt.eq(nextCur).addClass("current");
+    }
+};
+/*slider END*/
 /*СКРЫТЬ здaceholder по фокусу*/
 function placeholderHideOnfocus(){
     $(function () {
