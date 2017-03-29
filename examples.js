@@ -96,7 +96,7 @@ function customVideoPlayer(){
 /*video JS END*/
 /*slider*/
 function slide(dir, index){
-    cur = $slides.filter(".current").index();
+    cur = $slides.filter(".current").length > 0 $slides.filter(".current").index() : 0;
     var nextCur;
     var Xform;
     if((dir === "right") && (cur !== slidesCount-1)){
@@ -117,17 +117,12 @@ function slide(dir, index){
           return false;
       }
     }
-    dir === "right" ? Xform = 100 : Xform = -100;
-
-    TweenMax.to( $slides.eq(cur), 0.5, {xPercent:-Xform, autoAlpha:0, clearProps: "all", zIndex: 0});
-    TweenMax.fromTo( $slides.eq(nextCur), 0.5, {xPercent: Xform}, {xPercent:0, autoAlpha:1, zIndex: 1});
+  
+    var $curSlide = $slides.eq(cur),
+        $nextSlide = $slides.eq(nextCur);
 
     $slides.removeClass("current start");
     $slides.eq(nextCur).addClass("current");
-    if( args.indexOf("hasnav") > -1 ){
-      $pt.removeClass("current");
-      $pt.eq(nextCur).addClass("current");
-    }
 };
 /*slider END*/
 /*СКРЫТЬ здaceholder по фокусу*/
