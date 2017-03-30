@@ -95,35 +95,66 @@ function customVideoPlayer(){
 }
 /*video JS END*/
 /*slider*/
-function slide(dir, index){
-    cur = $slides.filter(".current").length > 0 $slides.filter(".current").index() : 0;
-    var nextCur;
-    var Xform;
+(function createGalery(){
+  var delayflagForSlider = false;
+  var $block = $(".galery"),
+      $slides = $(".galery").find(".slide"),
+      slidesCount = $slides.length;
+  
+      if(slidesCount == 0){return false;}
+  
+      var cur = $slides.filter(".current").length > 0 ? $slides.filter(".current").index() : 0;
+      TweenMax.set( $slides.eq(cur), {autoAlpha:1});
+      TweenMax.set( $block, { height: $slides.eq(cur).outerHeight() });
+
+  function slide(dir, index){
+    if(delayflagForSlider){return false;}
+    cur = $slides.filter(".current").length > 0 ? $slides.filter(".current").index() : 0;
+    var nextCur,
+        Xform = dir === "right" ? "100" : "-100";
     if((dir === "right") && (cur !== slidesCount-1)){
-        nextCur = cur+1;
+      nextCur = cur+1;
     }else if((dir === "right") && (cur === slidesCount-1)){
-        nextCur = 0;
+      nextCur = 0;
     }else if((dir === "left") && (cur !== 0)){
-        nextCur = cur-1;
+      nextCur = cur-1;
     }else if((dir === "left") && (cur === 0)){
-        nextCur = slidesCount-1;
+      nextCur = slidesCount-1;
     }else{
       nextCur = index;
       if(nextCur > cur){
-          var dir = "right";
+        var dir = "right";
       }else if(nextCur < cur){
-          var dir = "left";
+        var dir = "left";
       }else{
-          return false;
+        return false;
       }
     }
-  
+    
+    delayflagForSlider = true;
     var $curSlide = $slides.eq(cur),
         $nextSlide = $slides.eq(nextCur);
 
-    $slides.removeClass("current start");
+    TweenMax.fromTo( $curSlide, 0.5, {left:0, autoAlpha:1}, {left: -(Xform)+"%", zIndex: 0, autoAlpha:1});
+    TweenMax.fromTo( $nextSlide, 0.5, {left: (Xform)+"%", autoAlpha:1}, {left:0, autoAlpha:1, zIndex: 1});
+    TweenMax.to($block, 0.5, {
+      height: $nextSlide.outerHeight(),
+      onComplete: function(){
+        delayflagForSlider = false;
+      }
+    });
+
+    $slides.removeClass("current");
     $slides.eq(nextCur).addClass("current");
-};
+  };
+
+  $(".left-arrow").on("click", function(){
+    slide("left");
+  });
+  $(".right-arrow").on("click", function(){
+    slide("right");
+  });
+})();
 /*slider END*/
 /*СКРЫТЬ здaceholder по фокусу*/
 function placeholderHideOnfocus(){
