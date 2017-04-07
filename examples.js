@@ -376,3 +376,44 @@ function allTablesInit(){
     });
 };
 /*КЛАССЫ ДЛЯ ОФОРМЛЕНИЯ ТАБЛИЦ END*/
+/*тень блоков*/
+function hoverShadowBlock(){
+  var $block = $(".hoverShadowBlock");
+  if( $block.length == 0 ){ return false; }
+  var activeAnimCount = 0;
+  var globalZ = 0;
+
+  function checkCount(){
+    if( activeAnimCount == 0 ){
+      globalZ = 0;
+    }
+  }
+
+  $block.hover(function() {
+    var thisPos = $(this).css("position"),
+        animPos;
+    if( thisPos == "static" || thisPos == "relative"){
+      animPos = "relative";
+    }else if( thisPos == "fixed" ){
+      animPos = "fixed";
+    }else{
+      animPos = "absolute";
+    }
+    globalZ +=1;
+
+    activeAnimCount +=1;
+    TweenMax.set(this, { position: animPos, zIndex: globalZ, boxShadow: "0px 0px 0px 0px rgba(0,54,65,0)" });
+    TweenMax.to(this, .25, {boxShadow: "0px 5px 20px 0px rgba(0,54,65,0.5)"})
+  }, function() {
+    var $thiss = $(this);
+    TweenMax.to($thiss, .25, {
+      boxShadow: "0px 0px 0px 0px rgba(0,54,65,0)",
+      onComplete: function(){
+        TweenMax.set($thiss,{clearProps:"position, z-index, box-shadow"});
+        activeAnimCount -=1;
+        checkCount();
+      }
+    });
+  })
+}
+/*тень блоков END*/
