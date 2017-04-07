@@ -376,6 +376,7 @@ function allTablesInit(){
     });
 };
 /*КЛАССЫ ДЛЯ ОФОРМЛЕНИЯ ТАБЛИЦ END*/
+
 /*тень блоков*/
 function hoverShadowBlock(){
   var $block = $(".hoverShadowBlock");
@@ -383,9 +384,17 @@ function hoverShadowBlock(){
   var activeAnimCount = 0;
   var globalZ = 0;
 
+  function checkCount(){
+    console.log(activeAnimCount);
+    if( activeAnimCount == 0 ){
+      globalZ = 0;
+    }
+  }
 
-  $block.hover(function() {
-    var thisPos = $(this).css("position"),
+  $block.on("mouseenter", function() {
+    console.log("enter");
+    var $thiss = $(this),
+        thisPos = $(this).css("position"),
         animPos;
     if( thisPos == "static" || thisPos == "relative"){
       animPos = "relative";
@@ -394,21 +403,23 @@ function hoverShadowBlock(){
     }else{
       animPos = "absolute";
     }
-    globalZ +=1;
+    globalZ +=2;
 
+    activeAnimCount +=1;
     TweenMax.set(this, { position: animPos, zIndex: globalZ, boxShadow: "0px 0px 0px 0px rgba(0,54,65,0)" });
     TweenMax.to(this, .25, {boxShadow: "0px 5px 20px 0px rgba(0,54,65,0.5)"})
-  }, function() {
+  });
+  $block.on("mouseleave", function() {
+    console.log("leave");
     var $thiss = $(this);
+    activeAnimCount -=1;
     TweenMax.to($thiss, .25, {
       boxShadow: "0px 0px 0px 0px rgba(0,54,65,0)",
       onComplete: function(){
         TweenMax.set($thiss,{clearProps:"position, z-index, box-shadow"});
-        if( !TweenMax.isTweening( $block ) ){
-          globalZ = 0;
-        }
+        checkCount();
       }
     });
-  })
+  });
 }
 /*тень блоков END*/
