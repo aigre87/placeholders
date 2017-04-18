@@ -378,23 +378,20 @@ function allTablesInit(){
 /*КЛАССЫ ДЛЯ ОФОРМЛЕНИЯ ТАБЛИЦ END*/
 
 /*тень блоков*/
-function hoverShadowBlock(){
-  var $block = $(".hoverShadowBlock");
-  if( $block.length == 0 ){ return false; }
-  var activeAnimCount = 0;
-  var globalZ = 0;
+var global_zForhoverShadowBlock = 0;
+var global_CountForhoverShadowBlock = 0;
+function hoverShadowBlock(option, $e){
 
   function checkCount(){
-    console.log(activeAnimCount);
-    if( activeAnimCount == 0 ){
-      globalZ = 0;
+    if( global_CountForhoverShadowBlock == 0 ){
+      global_zForhoverShadowBlock = 0;
     }
   }
 
-  $block.on("mouseenter", function() {
-    console.log("enter");
-    var $thiss = $(this),
-        thisPos = $(this).css("position"),
+  function enter($el){
+    console.log(global_CountForhoverShadowBlock);
+    var $thiss = $el,
+        thisPos =$thiss.css("position"),
         animPos;
     if( thisPos == "static" || thisPos == "relative"){
       animPos = "relative";
@@ -403,23 +400,43 @@ function hoverShadowBlock(){
     }else{
       animPos = "absolute";
     }
-    globalZ +=2;
+    global_zForhoverShadowBlock +=2;
 
-    activeAnimCount +=1;
-    TweenMax.set(this, { position: animPos, zIndex: globalZ, boxShadow: "0px 0px 0px 0px rgba(0,54,65,0)" });
-    TweenMax.to(this, .25, {boxShadow: "0px 5px 20px 0px rgba(0,54,65,0.5)"})
-  });
-  $block.on("mouseleave", function() {
-    console.log("leave");
-    var $thiss = $(this);
-    activeAnimCount -=1;
+    global_CountForhoverShadowBlock +=1;
+    TweenMax.set($thiss, { position: animPos, zIndex: global_zForhoverShadowBlock, boxShadow: "0px 0px 0px 0px rgba(0,54,65,0)" });
+    TweenMax.to($thiss, .25, {boxShadow: "0px 5px 20px 0px rgba(0,54,65,0.5)"})
+  }
+  function leave($el){
+    console.log(global_CountForhoverShadowBlock);
+    var $thiss = $el;
     TweenMax.to($thiss, .25, {
       boxShadow: "0px 0px 0px 0px rgba(0,54,65,0)",
       onComplete: function(){
+        global_CountForhoverShadowBlock -=1;
         TweenMax.set($thiss,{clearProps:"position, z-index, box-shadow"});
         checkCount();
       }
     });
-  });
+  }
+  switch (option){
+    case 'enter':
+      return enter($e);
+      break;
+
+    case 'leave':
+      return leave($e);
+      break;
+
+    default:
+      var $block = $(".hoverShadowBlock");
+      if( $block.length == 0 ){ return false; }
+
+      $block.on("mouseenter", function() {
+        enter($(this));
+      });
+      $block.on("mouseleave", function() {
+        leave($(this));
+      });
+  }
 }
 /*тень блоков END*/
