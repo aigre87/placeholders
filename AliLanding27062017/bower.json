@@ -1,0 +1,31 @@
+{
+  "name": "rudenta",
+  "description": "",
+  "main": "index.js",
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src/libsSrc/",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    //"gsap": "^1.19.0",
+    //"highcharts": "^4.2.6",
+    //"magnific-popup": "^1.1.0"
+    //"jquery.scrollbar": "^0.2.11",
+    //"jquery-selectric": "^1.10.1",
+    //"smoothscroll-for-websites": "^1.4.4",
+    //"jquery.nicescroll": "^3.6.8",
+    //"scrollmagic": "^2.0.5",
+    //"video.js": "^5.14.1",
+    //"hammerjs": "^2.0.8",
+    //"jquery.inputmask": "^3.3.4",
+    //"svg4everybody": "^2.1.4",
+    //"shufflejs": "^4.1.1",
+    //"owl.carousel": "^2.2.1"
+  }
+}
