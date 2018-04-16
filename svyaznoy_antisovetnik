@@ -1,0 +1,32 @@
+
+  function sovetnikKiller() {
+    var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+    if (!MutationObserver) return;
+
+    var observer = new MutationObserver(function (mutations) {
+      mutations.forEach(function (mutation) {
+        if ((mutation.type !== 'childList') || !mutation.addedNodes.length) return;
+        var addedNode = mutation.addedNodes[0];
+
+        if (addedNode && (addedNode.nodeType === 1) && (addedNode.tagName === 'DIV') && addedNode.id && addedNode.className && (addedNode.id === addedNode.className)) {
+          var firstNodeChild = addedNode.firstChild;
+          if (firstNodeChild) firstNodeChild.className += ' sovetnik-killer';
+          else return;
+
+          var header = document.querySelector('.b-header');
+          var nav = document.querySelector('.b-nav');
+          if (header && nav) {
+            header.style.top = parseInt(getComputedStyle(header).top, 10) + 40 + 'px';
+            nav.style.top = parseInt(getComputedStyle(nav).top, 10) + 40 + 'px';
+          }
+
+          document.documentElement.className += ' sovetnik';
+          observer.disconnect();
+        }
+      });
+    });
+
+    observer.observe(document.body, {childList: true});
+  }
+
+  //sovetnikKiller();
